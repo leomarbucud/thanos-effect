@@ -46,7 +46,6 @@ class Particle {
         this.size = this.effect.size;
         this.selected = this.effect.selected;
         this.directionX = Math.max(2, Math.random() * 10);
-        // this.directionX = (Math.random() * 20) - 10;
         this.directionY = Math.max(5, Math.random() * 10);
         this.opacity = 1;
     }
@@ -82,7 +81,7 @@ class Effect {
         this.image = image;
         this.selected = selected;
         this.particles = [];
-        this.size = 1;
+        this.size = 2;
         this.x = x;
         this.y = this.height - this.image.height;
         this.hy = null;
