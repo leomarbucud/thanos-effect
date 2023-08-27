@@ -3,6 +3,9 @@ const ctx = canvas.getContext('2d');
 canvas.width = 700;
 canvas.height = 450;
 
+const audio = new Audio();
+audio.src = './thanos.mp3';
+
 const images = [
     "jinbei",
     "brook",
@@ -79,13 +82,14 @@ class Effect {
         this.image = image;
         this.selected = selected;
         this.particles = [];
-        this.size = 2;
+        this.size = 1;
         this.x = x;
         this.y = this.height - this.image.height;
         this.hy = null;
         this.cy = 0;
         this.start = false;
         this.finished = false;
+        this.playing = false;
 
         this.init();
     }
@@ -114,8 +118,13 @@ class Effect {
     }
     update() {
         this.particles.forEach(p=>p.update());
-        if( this.cy > (this.height * 0.5) || ! this.selected ) {
+        if( this.cy > (this.height * 1) || ! this.selected ) {
             this.finished = true;
+        }
+        if( ! this.playing ) {
+            this.playing = true;
+            audio.currentTime = 2;
+            audio.play();
         }
     }
     draw() {
@@ -135,7 +144,7 @@ function loaded() {
     const keys = Object.keys(imagesLoaded);
     let = randomKeys = [...keys].sort(() => 0.5 - Math.random());
     // get half
-    randomKeys = [...randomKeys].slice(0, Math.floor(randomKeys.length/2));
+    // randomKeys = [...randomKeys].slice(0, Math.floor(randomKeys.length/2));
 
     // add images to canvas
     imagesLoaded.forEach((image, i) => {
@@ -150,11 +159,9 @@ let start = false;
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     effects.forEach((e, i) => {
-        // e.cy += Math.max(10, Math.random() * 20) + (i * 50);
         const p = i == 0 ? true : effects[i-1].finished;
         if( start && p ) {
-            // e.cy = (i * -(p*0.5)) + c;
-            e.cy += Math.max(10, Math.random() * 10);
+            e.cy += Math.max(1, Math.random() * 10);
             e.start = true;
             e.update();
         }
@@ -164,9 +171,9 @@ function animate() {
 }
 const snap = document.querySelector('.snap');
 snap.addEventListener('click', () => {
-    snap.src = "./img/thanos-gauntlet-1.gif";
+    snap.classList.add('active');
     setTimeout(() => {
         start = true;
-        snap.src = "./img/thanos-gauntlet-0.png";
+        snap.classList.remove('active');
     }, 3000)
 });
